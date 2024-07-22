@@ -29,7 +29,7 @@ public class ItemController {
         for(Item item : result){
             titles.append(item.title).append(" ");
         }
-        model.addAttribute("items", titles.toString());
+        model.addAttribute("items", result);
         return "list";
     }
 }

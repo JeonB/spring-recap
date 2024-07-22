@@ -7,12 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.util.Date;
+import lombok.ToString;
 
 @Entity
+@ToString
 public class Announcement {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     public String title;
     public LocalDate date;
+
 }
