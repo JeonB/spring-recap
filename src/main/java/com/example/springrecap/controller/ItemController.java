@@ -4,10 +4,10 @@ import com.example.springrecap.entity.Item;
 import com.example.springrecap.entity.ItemRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -25,10 +25,6 @@ public class ItemController {
     @GetMapping("/list")
     String list(Model model){
         List<Item> result = itemRepository.findAll();
-        StringBuilder titles = new StringBuilder();
-        for(Item item : result){
-            titles.append(item.title).append(" ");
-        }
         model.addAttribute("items", result);
         return "list";
     }
