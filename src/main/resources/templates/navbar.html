@@ -1,0 +1,7 @@
+
+<div class="nav" th:fragment="navbar">
+  <a class="logo">SpringMall</a>
+  <a href="/" th:classappend="${servletPath == '/' ? 'active' : ''}">List</a>
+  <a href="/write" th:classappend="${servletPath == '/write' ? 'active' : ''}">Write</a>
+</div>
+

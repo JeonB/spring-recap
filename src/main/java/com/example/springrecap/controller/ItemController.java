@@ -25,7 +25,7 @@ public class ItemController {
 //        this.itemRepository = itemRepository;
 //    }
 
-    @GetMapping("/list")
+    @GetMapping("/")
     String list(Model model){
         List<Item> result = itemRepository.findAll();
         System.out.println(result);
@@ -50,6 +50,6 @@ public class ItemController {
 //        item.setTitle(title);
 //        item.setPrice(price);
         itemRepository.save(item);
-        return "redirect:/list";
+        return "redirect:/";
     }
 }
