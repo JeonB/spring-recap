@@ -6,14 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ItemController {
 
@@ -24,22 +29,24 @@ public class ItemController {
 //    public ItemController(ItemRepository itemRepository) {
 //        this.itemRepository = itemRepository;
 //    }
+//
+//    @GetMapping("/")
+//    String list(Model model){
+//        List<Item> result = itemRepository.findAll();
+//        System.out.println(result);
+//        model.addAttribute("items", result);
+//        return "list";
+//    }
+//
 
-    @GetMapping("/")
-    String list(Model model){
-        List<Item> result = itemRepository.findAll();
-        System.out.println(result);
-        model.addAttribute("items", result);
-        return "list";
+
+    @GetMapping("/item/exists")
+    public ResponseEntity<Boolean> existsByTitle(@RequestParam String title) {
+        boolean exists = itemRepository.existsByTitle(title);
+        return ResponseEntity.ok(exists);
     }
-
-    @GetMapping("/write")
-    String write(){
-        return "write";
-    }
-
     @PostMapping("/item")
-    String save(@ModelAttribute Item item){
+    void save(@RequestBody Item item){
 //        String save(@RequestParam Map formData){
 //        Map data = formData;
 //
@@ -49,7 +56,7 @@ public class ItemController {
 //        Item item = new Item();
 //        item.setTitle(title);
 //        item.setPrice(price);
+        if(item.getTitle() != null && item.getPrice() != null) System.out.println("item 저장 완료 : ->" + item);
         itemRepository.save(item);
-        return "redirect:/";
     }
 }

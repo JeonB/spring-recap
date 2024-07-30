@@ -10,13 +10,18 @@
 </head>
 <body>
 <div th:replace="~{navbar.html :: navbar}"></div>
-<div class="card" th:each="item:${items}">
+<div class="card" th:each="item : ${items}" th:onclick="'getDetail(' + ${item.getId()} + ')'" style="cursor: pointer">
   <img src="https://placehold.co/300">
   <div>
-    <h4 th:text="${item.getTitle()}">아이폰</h4>
-    <p th:text="${item.getPrice()}">400억</p>
+    <h4 th:text="${item.getTitle()}">상품명</h4>
+    <p th:text="${item.getPrice()}">가격</p>
   </div>
 </div>
 
 </body>
+<script>
+  function getDetail(id) {
+    location.href = "/detail/" + id;
+  }
+</script>
 </html>

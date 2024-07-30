@@ -7,7 +7,15 @@
   width: 150px;
   margin-right: 20px;
 }
-
+.detail{
+  margin : 30px auto;
+  display: flex;
+  flex-direction: column;
+}
+.detail img{
+  width: 200px;
+  margin-bottom: 20px;
+}
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap');
 .nav {
   display: flex;
