@@ -8,13 +8,15 @@
   margin-right: 20px;
 }
 .detail{
-  margin : 30px auto;
+  margin : 30px;
   display: flex;
+  width: 200px;
   flex-direction: column;
 }
 .detail img{
   width: 200px;
   margin-bottom: 20px;
+  align-self: center;
 }
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap');
 .nav {

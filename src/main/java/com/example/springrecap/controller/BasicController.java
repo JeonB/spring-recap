@@ -53,10 +53,10 @@ public class BasicController {
         itemRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handleItemNotFoundException(IllegalArgumentException ex, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        return "redirect:/";
-    }
+//
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public String handleItemNotFoundException(IllegalArgumentException ex, RedirectAttributes redirectAttributes) {
+//        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+//        return "redirect:/";
+//    }
 }
