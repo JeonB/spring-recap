@@ -33,10 +33,11 @@
     })
     .then(response => {
       if (response.ok) {
-        window.location.href = "/";
+        alert("삭제 성공!");
       } else {
         alert("Failed to delete item.");
       }
+      location.href = "/";
     });
   }
 </script>

@@ -17,15 +17,4 @@ public class GlobalController {
         return request.getServletPath();
     }
 
-    // 모든 API의 IllegalArgumentException 에러를 캐치
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleItemNotFoundException(MethodArgumentTypeMismatchException ex, RedirectAttributes redirectAttributes) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    // 모든 API의 Exception 에러를 캐치
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleNotFoundException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
 }
