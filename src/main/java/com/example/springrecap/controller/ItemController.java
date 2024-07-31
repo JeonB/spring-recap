@@ -42,8 +42,14 @@ public class ItemController {
 
     @GetMapping("/item/exists")
     public ResponseEntity<Boolean> existsByTitle(@RequestParam String title) {
-        boolean exists = itemRepository.existsByTitle(title);
-        return ResponseEntity.ok(exists);
+        try {
+            boolean exists = itemRepository.existsByTitle(title);
+            return ResponseEntity.ok(exists);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
     }
     @PostMapping("/item")
     void save(@RequestBody Item item){
@@ -59,4 +65,5 @@ public class ItemController {
         if(item.getTitle() != null && item.getPrice() != null) System.out.println("item 저장 완료 : ->" + item);
         itemRepository.save(item);
     }
+
 }

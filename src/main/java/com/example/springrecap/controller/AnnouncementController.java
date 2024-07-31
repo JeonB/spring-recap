@@ -20,4 +20,5 @@ public class AnnouncementController {
         model.addAttribute("items", result);
         return "announcement";
     }
+    
 }
