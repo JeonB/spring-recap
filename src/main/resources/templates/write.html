@@ -10,15 +10,37 @@
 </head>
 <body>
 <div th:replace="~{navbar.html :: navbar}"></div>
-<form action="/item" method="post">
+<form th:action="@{/item}" method="post" th:object="${item}">
   <label>
-
-  <input type="text" name="title" placeholder="상풍명">
-  <input type="text" name="price" placeholder="가격">
-  <button type="submit">등록</button>
-
+    <input type="text" name="title" placeholder="상품명" th:value="*{title}">
+    <input type="text" name="price" placeholder="가격" th:value="*{price}">
+    <button type="submit" th:if="${item.id == null}">등록</button>
+    <button type="button" th:if="${item.id != null}" onclick="updateItem()">수정</button>
   </label>
 </form>
 
+<script>
+  function updateItem() {
+    const id = [[${item.id}]];
+    const title = document.querySelector('input[name="title"]').value;
+    const price = document.querySelector('input[name="price"]').value;
+
+    fetch(`/update/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: title, price: price })
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("수정 성공!");
+        location.href = "/";
+      } else {
+        alert("Failed to update item.");
+      }
+    });
+  }
+</script>
 </body>
 </html>

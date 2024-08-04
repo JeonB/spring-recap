@@ -37,4 +37,10 @@ public class ItemService {
         return itemRepository.existsById(id);
     }
 
+    public void updateItem(Long id, Item updatedItem) {
+        Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
+        item.setTitle(updatedItem.getTitle());
+        item.setPrice(updatedItem.getPrice());
+        itemRepository.save(item);
+    }
 }

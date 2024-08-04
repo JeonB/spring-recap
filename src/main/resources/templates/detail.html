@@ -20,6 +20,7 @@
   </div>
   <div>
     <button th:onclick="'deleteItem(' + ${item.getId()} + ')'" style="cursor: pointer">삭제</button>
+    <button th:onclick="|location.href='/edit/' + [[${item.getId()}]]|" style="cursor: pointer" type="button">수정</button>
   </div>
   </div>
 </div>
@@ -40,6 +41,7 @@
       location.href = "/";
     });
   }
+
 </script>
 </body>
 </html>

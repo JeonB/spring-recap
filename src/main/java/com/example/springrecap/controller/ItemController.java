@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -67,5 +69,23 @@ public class ItemController {
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody Item updatedItem) {
+        if(itemService.isPresentItemById(id)){
+            itemService.updateItem(id, updatedItem);
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editPage(@PathVariable Long id, Model model) throws Exception {
+        Item item = itemService.getItem(id);
+        model.addAttribute("item", item);
+        return "write";
     }
 }
