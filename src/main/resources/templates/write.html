@@ -14,32 +14,81 @@
   <label>
     <input type="text" name="title" placeholder="상품명" th:value="*{title}">
     <input type="text" name="price" placeholder="가격" th:value="*{price}">
-    <button type="submit" th:if="${item.id == null}">등록</button>
-    <button type="button" th:if="${item.id != null}" onclick="updateItem()">수정</button>
+    <button type="button" th:if="${item.id ==  null}" onclick="writeItem()" style="cursor: pointer">등록</button>
+    <button type="button" th:if="${item.id != null}" onclick="updateItem()" style="cursor: pointer">수정</button>
   </label>
 </form>
 
 <script>
-  function updateItem() {
-    const id = [[${item.id}]];
+  function writeItem() {
     const title = document.querySelector('input[name="title"]').value;
     const price = document.querySelector('input[name="price"]').value;
 
-    fetch(`/update/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title: title, price: price })
-    })
-    .then(response => {
-      if (response.ok) {
-        alert("수정 성공!");
-        location.href = "/";
+    if(!validation(title,price)){
+      return;
+    }
+
+    fetch('/items')
+    .then(response => response.json())
+    .then(items => {
+      const titleExists = items.some(item => item.title === title);
+      if (titleExists) {
+        alert("이미 존재하는 상품명입니다.");
       } else {
-        alert("Failed to update item.");
+        document.querySelector('form').submit();
       }
     });
+  }
+
+  function updateItem() {
+    const id = [[${item.id != null ? item.id : 'null'}]];
+    const title = document.querySelector('input[name="title"]').value;
+    const price = document.querySelector('input[name="price"]').value;
+
+    if(!validation(title,price)){
+      return;
+    }
+
+    fetch('/items')
+    .then(response => response.json())
+    .then(items => {
+      const titleExists = items.some(item => item.title === title && item.id !== id);
+      if (titleExists) {
+        alert("이미 존재하는 상품명입니다.");
+        return;
+      }
+
+      fetch(`/update/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title: title, price: price })
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("수정 성공!");
+          location.href = "/";
+        } else {
+          alert("Failed to update item.");
+        }
+      });
+    });
+  }
+
+  const validation = (title,price) =>{
+    if(title === '' || price === '') {
+      alert("상품명 또는 가격을 입력해주세요.");
+      return false;
+    }
+    else if(title.length > 50){
+      alert("상품명은 50자 이내로 입력해주세요.");
+      return false;
+    }else if(price < 0){
+      alert("가격은 0 이상으로 입력해주세요.");
+      return false;
+    }
+    return true;
   }
 </script>
 </body>

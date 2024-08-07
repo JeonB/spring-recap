@@ -19,12 +19,19 @@
     <p th:text="${item.getPrice()}">가격</p>
   </div>
   <div>
-    <button th:onclick="'deleteItem(' + ${item.getId()} + ')'" style="cursor: pointer">삭제</button>
     <button th:onclick="|location.href='/edit/' + [[${item.getId()}]]|" style="cursor: pointer" type="button">수정</button>
+
+    <button th:onclick="'confirmDelete([[' + ${item.getId()} + ']])'" style="cursor: pointer">삭제</button>
   </div>
   </div>
 </div>
 <script>
+  function confirmDelete(id) {
+    if (confirm("삭제하시겠습니까?")) {
+      deleteItem(id);
+    }
+  }
+
   function deleteItem(id) {
     fetch(`/delete/${id}`, {
       method: 'DELETE',
@@ -35,10 +42,10 @@
     .then(response => {
       if (response.ok) {
         alert("삭제 성공!");
+        location.href = "/";
       } else {
         alert("Failed to delete item.");
       }
-      location.href = "/";
     });
   }
 

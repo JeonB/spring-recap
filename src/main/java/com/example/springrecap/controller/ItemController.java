@@ -32,7 +32,8 @@ public class ItemController {
     }
 
     @GetMapping("/write")
-    String write(){
+    String write(Model model){
+        model.addAttribute("item", new Item());
         return "write";
     }
 
@@ -87,5 +88,11 @@ public class ItemController {
         Item item = itemService.getItem(id);
         model.addAttribute("item", item);
         return "write";
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<List<Item>> getAllItems() {
+        List<Item> items = itemService.getALLItems();
+        return ResponseEntity.ok(items);
     }
 }
