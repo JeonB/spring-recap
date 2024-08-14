@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="/main.css" rel="stylesheet">
+  <title>Sign In</title>
+</head>
+<body>
+<div th:replace="~{navbar.html :: navbar}"></div>
+<div>
+  <label>
+    <input type="text" name="username" placeholder="아이디">
+    <input type="text" name="password" placeholder="비밀번호">
+    <button type="button" onclick="verifyMember()" style="cursor: pointer">로그인</button>
+  </label>
+</div>
+
+<script>
+  function verifyMember() {
+    const username = document.querySelector('input[name="username"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+
+    if(!validation(username,password)){
+      return;
+    }
+
+    fetch('/sign-in-member', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({username, password})
+    })
+    .then(response => {
+      if(response.ok){
+        return response.text();
+      } else {
+        throw new Error("아이디 혹은 비밀번호가 일치하지 않습니다.");
+      }
+    })
+    .then(message => {
+      if (message === "success") {
+        alert("로그인 성공");
+        location.href = '/';
+      }
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+  }
+
+  const validation = (username,password) =>{
+    if(username === '' || password === '') {
+      alert("ID와 비밀번호를 입력해주세요.");
+      return false;
+    }
+    else if(username.length > 50){
+      alert("ID는 50자 이내로 입력해주세요.");
+      return false;
+    }else if(password < 0){
+      alert("비밀번호는 50자 이내로 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
+</script>
+</body>
+</html>

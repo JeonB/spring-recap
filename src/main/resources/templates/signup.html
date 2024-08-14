@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="/main.css" rel="stylesheet">
+  <title>Sign Up</title>
+</head>
+<body>
+<div th:replace="~{navbar.html :: navbar}"></div>
+<form th:action="@{/signup}" method="post" th:object="${member}">
+  <label>
+    <input type="text" name="username" placeholder="아이디" th:value="*{username}">
+    <input type="text" name="password" placeholder="비밀번호" th:value="*{password}">
+    <button type="button" th:if="${member.id ==  null}" onclick="addMember()" style="cursor: pointer">등록</button>
+<!--    <button type="button" th:if="${member.id != null}" onclick="updateItem()" style="cursor: pointer">수정</button>-->
+  </label>
+</form>
+
+<script>
+  function addMember() {
+    const username = document.querySelector('input[name="username"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+
+    if(!validation(username,password)){
+      return;
+    }
+
+    fetch('/members')
+    .then(response => response.json())
+    .then(members => {
+      const usernameExists = members.some(member => member.username === username);
+      if (usernameExists) {
+        alert("이미 존재하는 유저명입니다.");
+      } else {
+        document.querySelector('form').submit();
+      }
+    });
+  }
+  //
+  // function updateItem() {
+  //   const id = [[${member.id != null ? member.id : 'null'}]];
+  //   const username = document.querySelector('input[name="username"]').value;
+  //   const password = document.querySelector('input[name="password"]').value;
+  //
+  //   if(!validation(username,password)){
+  //     return;
+  //   }
+  //
+  //   fetch('/members')
+  //   .then(response => response.json())
+  //   .then(members => {
+  //     const usernameExists = members.some(member => member.username === username && member.id !== id);
+  //     if (usernameExists) {
+  //       alert("이미 존재하는 ID입니다.");
+  //       return;
+  //     }
+  //
+  //     fetch(`/update/${id}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({ username: username, password: password })
+  //     })
+  //     .then(response => {
+  //       if (response.ok) {
+  //         alert("수정 성공!");
+  //         location.href = "/";
+  //       } else {
+  //         alert("Failed to update member.");
+  //       }
+  //     });
+  //   });
+  // }
+
+  const validation = (username,password) =>{
+    if(username === '' || password === '') {
+      alert("ID와 비밀번호를 입력해주세요.");
+      return false;
+    }
+    else if(username.length > 50){
+      alert("ID는 50자 이내로 입력해주세요.");
+      return false;
+    }else if(password < 0){
+      alert("비밀번호는 50자 이내로 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
+</script>
+</body>
+</html>

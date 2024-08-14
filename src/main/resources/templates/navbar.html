@@ -1,7 +1,10 @@
-
 <div class="nav" th:fragment="navbar">
   <span style="margin-right: 1em" class="logo">SpringMall</span>
   <a href="/" th:classappend="${servletPath == '/' ? 'active' : ''}">List</a>
   <a href="/write" th:classappend="${servletPath == '/write' ? 'active' : ''}">Write</a>
-</div>
 
+  <a th:if="${session.username == null}" href="/sign-in" th:classappend="${servletPath == '/sign-in' ? 'active' : ''}">Sign In</a>
+  <a th:if="${session.username != null}" href="/sign-out"
+     th:classappend="${servletPath == '/sign-out' ? 'active' : ''}"
+     th:onclick="return confirm('로그아웃 하시겠습니까?')">Sign Out</a>
+</div>
