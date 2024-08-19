@@ -1,26 +1,43 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="/main.css" rel="stylesheet">
-  <title>Sign Up</title>
-</head>
+<head th:replace="~{head.html :: commonHead(pageTitle='회원가입')}"></head>
 <body>
 <div th:replace="~{navbar.html :: navbar}"></div>
-<form th:action="@{/signup}" method="post" th:object="${member}">
+<form th:action="@{/sign-up}" method="post" th:object="${member}">
   <label>
+    <input type="text" name="displayName" placeholder="이름" th:value="*{displayName}">
     <input type="text" name="username" placeholder="아이디" th:value="*{username}">
-    <input type="text" name="password" placeholder="비밀번호" th:value="*{password}">
+    <input type="text" name="password" placeholder="비밀번호" >
     <button type="button" th:if="${member.id ==  null}" onclick="addMember()" style="cursor: pointer">등록</button>
-<!--    <button type="button" th:if="${member.id != null}" onclick="updateItem()" style="cursor: pointer">수정</button>-->
+    <button type="button" th:if="${member.id != null}" onclick="updateItem()" style="cursor: pointer">수정</button>
   </label>
 </form>
 
 <script>
   function addMember() {
+    const displayName = document.querySelector('input[name="displayName"]').value;
+    const username = document.querySelector('input[name="username"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+
+    if(!validation(displayName,username,password)){
+      return;
+    }
+
+    fetch('/members')
+    .then(response => response.json())
+    .then(members => {
+      const usernameExists = members.some(member => member.username === username && member.id !== id);
+      if (usernameExists) {
+        alert("이미 존재하는 유저명입니다.");
+      } else {
+        document.querySelector('form').submit();
+      }
+    });
+  }
+
+  function updateItem() {
+    const id = [[${member.id != null ? member.id : 'null'}]];
+    const displayName = document.querySelector('input[name="displayName"]').value;
     const username = document.querySelector('input[name="username"]').value;
     const password = document.querySelector('input[name="password"]').value;
 
@@ -31,54 +48,37 @@
     fetch('/members')
     .then(response => response.json())
     .then(members => {
-      const usernameExists = members.some(member => member.username === username);
+      const usernameExists = members.some(member => member.username === username && member.id !== id);
       if (usernameExists) {
-        alert("이미 존재하는 유저명입니다.");
-      } else {
-        document.querySelector('form').submit();
+        alert("이미 존재하는 ID입니다.");
+        return;
       }
+
+      fetch(`/update-member/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({displayName: displayName, username: username, password: password })
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("수정 성공!");
+          location.href = "/";
+        } else {
+          alert("Failed to update member.");
+        }
+      });
     });
   }
-  //
-  // function updateItem() {
-  //   const id = [[${member.id != null ? member.id : 'null'}]];
-  //   const username = document.querySelector('input[name="username"]').value;
-  //   const password = document.querySelector('input[name="password"]').value;
-  //
-  //   if(!validation(username,password)){
-  //     return;
-  //   }
-  //
-  //   fetch('/members')
-  //   .then(response => response.json())
-  //   .then(members => {
-  //     const usernameExists = members.some(member => member.username === username && member.id !== id);
-  //     if (usernameExists) {
-  //       alert("이미 존재하는 ID입니다.");
-  //       return;
-  //     }
-  //
-  //     fetch(`/update/${id}`, {
-  //       method: 'PUT',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({ username: username, password: password })
-  //     })
-  //     .then(response => {
-  //       if (response.ok) {
-  //         alert("수정 성공!");
-  //         location.href = "/";
-  //       } else {
-  //         alert("Failed to update member.");
-  //       }
-  //     });
-  //   });
-  // }
 
-  const validation = (username,password) =>{
-    if(username === '' || password === '') {
-      alert("ID와 비밀번호를 입력해주세요.");
+  const validation = (displayName,username,password) =>{
+    if(username === '' || password === '' || displayName === '') {
+      alert("이름 또는 ID,비밀번호를 입력해주세요.");
+      return false;
+    }
+    else if(displayName.length > 50){
+      alert("이름은 50자 이내로 입력해주세요.");
       return false;
     }
     else if(username.length > 50){

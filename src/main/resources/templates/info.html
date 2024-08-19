@@ -1,32 +1,31 @@
 <!doctype html>
 <html lang="en">
-<head th:replace="~{head.html :: commonHead(pageTitle='상품 상세 정보')}"></head>
+<head th:replace="~{head.html :: commonHead(pageTitle='내 정보')}"></head>
 <body>
 <div th:replace="~{navbar.html :: navbar}"></div>
 <div class="detail">
   <img src="https://placehold.co/300">
   <div>
   <div>
-    <h3 th:text="${item.getId()}">상품번호</h3>
-    <h4 th:text="${item.getTitle()}">상품</h4>
-    <p th:text="${item.getPrice()}">가격</p>
+    <h4 th:text="${member.getDisplayName()}">닉네임</h4>
+    <p th:text="${member.getUsername()}">아이디</p>
   </div>
   <div>
-    <button th:onclick="|location.href='/edit/' + [[${item.getId()}]]|" style="cursor: pointer" type="button">수정</button>
+    <button th:onclick="|location.href='/edit-member/' + [[${member.getId()}]]|" style="cursor: pointer" type="button">수정</button>
 
-    <button th:onclick="'confirmDelete([[' + ${item.getId()} + ']])'" style="cursor: pointer">삭제</button>
+    <button th:onclick="'confirmDelete([[' + ${member.getId()} + ']])'" style="cursor: pointer">회원 탈퇴</button>
   </div>
   </div>
 </div>
 <script>
   function confirmDelete(id) {
     if (confirm("삭제하시겠습니까?")) {
-      deleteItem(id);
+      deleteMember(id);
     }
   }
 
-  function deleteItem(id) {
-    fetch(`/delete/${id}`, {
+  function deleteMember(id) {
+    fetch(`/delete-member/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

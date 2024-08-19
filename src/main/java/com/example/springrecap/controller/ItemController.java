@@ -1,15 +1,11 @@
 package com.example.springrecap.controller;
 
 import com.example.springrecap.entity.Item;
-import com.example.springrecap.entity.ItemRepository;
-import com.example.springrecap.entity.Member;
 import com.example.springrecap.service.ItemService;
-import com.example.springrecap.service.MemberService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;

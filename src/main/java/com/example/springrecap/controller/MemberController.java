@@ -11,9 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,6 +30,13 @@ public class MemberController {
     public ResponseEntity<List<Member>> getAllMembers() {
         List<Member> members = memberService.getALLMembers();
         return ResponseEntity.ok(members);
+    }
+
+    @GetMapping("/info/{id}")
+    public String infoPage(@PathVariable Long id, Model model) throws Exception {
+        Member member = memberService.getMember(id);
+        model.addAttribute("member", member);
+        return "info";
     }
 
     @PostMapping("/sign-up")
@@ -60,12 +70,41 @@ public class MemberController {
     @PostMapping("/sign-in-member")
     @ResponseBody
     public ResponseEntity<String> signInMember(@RequestBody Member member, HttpServletRequest request) {
-        if (memberService.isPresentMemberByUsername(member.getUsername()) && new BCryptPasswordEncoder().matches(member.getPassword(), memberService.getMemberByUsername(member.getUsername()).getPassword())) {
+        Member foundMember = memberService.getMemberByUsername(member.getUsername());
+        if (foundMember != null && new BCryptPasswordEncoder().matches(member.getPassword(), foundMember.getPassword())) {
             HttpSession session = request.getSession(true);
-            session.setAttribute("username", member.getUsername());
+            session.setAttribute("username", foundMember.getUsername());
+            session.setAttribute("id", foundMember.getId());
             return ResponseEntity.ok("success");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 접근입니다");
+        }
+    }
+
+    @PutMapping("/update-member/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody Member updatedMember) {
+        if(memberService.isPresentMemberById(id)){
+            memberService.updateMember(id, updatedMember);
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/edit-member/{id}")
+    public String editPage(@PathVariable Long id, Model model) throws Exception {
+        Member member = memberService.getMember(id);
+        model.addAttribute("member", member);
+        return "signup";
+    }
+
+    @DeleteMapping("/delete-member/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        if(memberService.isPresentMemberById(id)){
+            memberService.deleteMember(id);
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

@@ -4,6 +4,7 @@ import com.example.springrecap.entity.Member;
 import com.example.springrecap.entity.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,8 +40,11 @@ public class MemberService {
 
     public void updateMember(Long id, Member updatedMember) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
-//        member.setTitle(updatedMember.getTitle());
-//        member.setPrice(updatedMember.getPrice());
+        member.setDisplayName(updatedMember.getDisplayName());
+        member.setUsername(updatedMember.getUsername());
+        var result = new BCryptPasswordEncoder().encode(updatedMember.getPassword());
+        member.setPassword(result);
+
         memberRepository.save(member);
     }
 }

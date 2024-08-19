@@ -24,6 +24,7 @@ public class Member {
     @Column(length = 500)
     private String password;
 
+    @Column(length = 500)
     private String displayName;
 
     public Member orElseThrow(Supplier<? extends RuntimeException> exceptionSupplier) {

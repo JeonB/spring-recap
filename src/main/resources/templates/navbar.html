@@ -4,7 +4,14 @@
   <a href="/write" th:classappend="${servletPath == '/write' ? 'active' : ''}">Write</a>
 
   <a th:if="${session.username == null}" href="/sign-in" th:classappend="${servletPath == '/sign-in' ? 'active' : ''}">Sign In</a>
+
   <a th:if="${session.username != null}" href="/sign-out"
      th:classappend="${servletPath == '/sign-out' ? 'active' : ''}"
      th:onclick="return confirm('로그아웃 하시겠습니까?')">Sign Out</a>
+
+  <a th:if="${session.username != null}" th:href="@{/info/{id}(id=${session.id})}"
+     th:classappend="${servletPath == '/info' ? 'active' : ''}">내 정보</a>
+
+  <a th:if="${session.username == null}" href="/add-member"
+     th:classappend="${servletPath == '/add-member' ? 'active' : ''}">회원 가입</a>
 </div>
