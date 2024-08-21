@@ -7,8 +7,8 @@
   <img src="https://placehold.co/300">
   <div>
   <div>
-    <h4 th:text="${member.getDisplayName()}">닉네임</h4>
-    <p th:text="${member.getUsername()}">아이디</p>
+    <h4 th:text="'닉네임: ' + ${member.getDisplayName()}">닉네임</h4>
+    <p th:text="'아이디: ' + ${member.getUsername()}">아이디</p>
   </div>
   <div>
     <button th:onclick="|location.href='/edit-member/' + [[${member.getId()}]]|" style="cursor: pointer" type="button">수정</button>
